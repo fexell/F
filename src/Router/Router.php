@@ -186,12 +186,12 @@
         && preg_match_all('/((\:)([a-z0-9]+))/i', $route, $matches)) {
 
           /**
-           * @var array $explodedSubdirectories Extract all subdirectories from the url/uri in $routes
+           * @var array $explodedRoute Extract everything between forward slashes (/)
            */
           $explodedRoute = explode('/', $route);
 
           /**
-           * @var array $explodedUri Extract all subdirectories from $this->getRequestUri() ($_SERVER['REQUEST_URI])
+           * @var array $explodedUri Extract everything between forward slashes from $this->getRequestUri() ($_SERVER['REQUEST_URI])
            */
           $explodedUri = explode('/', $this->getRequestUri());
 
