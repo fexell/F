@@ -20,7 +20,7 @@
   class Router {
 
     /**
-     * @var Request $request The variable to "hold" he Request class
+     * @var Request $request The variable to "hold" the Request class
      * @access protected
      */
     protected Request $request;
@@ -32,7 +32,7 @@
     protected Response $response;
 
     /**
-     * @var string $route The route/path to "listen" to, and set by the router method ($this->router('/{ $route }'))
+     * @var string $route The route/path to "listen" to, and set by the router method ($this->router('/$route'))
      * @access protected
      */
     protected string $route;
@@ -153,6 +153,7 @@
       // Else if the callback IS NOT a function, return/exit with an error (and error message)
       else if(!is_callable($callback)) exit('The callback method needs to be a function.');
 
+      // Add the route (with its request method, route, and callback method) to the self::$routes array
       return self::$routes[ $route ] = [
         'method' => $method,
         'route' => $route,
@@ -259,6 +260,15 @@
      */
     public function post(callable $callback): array {
       return $this->addRoute('POST', $this->route, $callback);
+    }
+
+    /**
+     * The router method for put calls ($app->router('/{ PATH }')->put(...))
+     * @param callable $callback Run the anonymous function when running the put method from Router class
+     * @access public
+     */
+    public function put(callable $callback): array {
+      return $this->addRoute('PUT', $this->route, $callback);
     }
 
     /**

@@ -1,23 +1,15 @@
 <?php
 
-  namespace F\Http;
+  namespace F\Http\Request;
 
   use F\Http\Request;
+  use F\Http\Response\Json;
+  use F\Http\Response\Error;
 
   class Parameters extends Request {
-    public static string $param;
-    public static array $params = [];
+    private string | null $param = null;
 
-    public function __construct($param) {
-      self::$param = $param;
-      self::$params = parent::$params;
-    }
-
-    public function get() {
-      return htmlspecialchars($_GET[ self::$param ]);
-    }
-
-    public function print() {
-      return print(htmlspecialchars($_GET[ self::$param ]));
+    public function __construct(string | null $param = null) {
+      $this->param = $param;
     }
   }
