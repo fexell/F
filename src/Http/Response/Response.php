@@ -20,8 +20,7 @@
    * @access public
    */
   class Response {
-    protected Status $status;
-
+    
     /**
      * The method for the Error class, to handle errors
      * @param string $message The error message
@@ -48,7 +47,7 @@
      * @return Status Return a new instance of the Status class
      */
     public function status(int $statusCode) {
-      return $this->status = new Status($statusCode);
+      return new Status($statusCode);
     }
 
     /**

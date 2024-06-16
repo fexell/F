@@ -2,8 +2,11 @@
 
   namespace F\Http\Response;
 
+  require_once __DIR__ . '/../Status/StatusCodes.php';
+
   use F\Http\Response;
   use F\Http\Response\Json;
+  use F\Http\Response\HttpStatusCodes;
   use F\Http\Response\Text;
 
   class Error extends Response {
@@ -36,10 +39,14 @@
       self::$errorData = $errorData;
     }
 
+    /**
+     * Convert/return the error as json
+     * @return Json Returns the error message and error data as json
+     */
     public function toJson() {
       return $this->response->status(http_response_code() !== 200 && http_response_code() !== 400
       ? http_response_code()
-      : 400)->json(
+      : HttpStatusCodes::BAD_REQUEST)->json(
         self::$message,
         [
           'statusCode' => http_response_code(),
@@ -47,12 +54,20 @@
         ]);
     }
 
+    /**
+     * Return the error (only the error message) as plain text
+     * @return Text Returns the error message as plain text
+     */
     public function toPlainText() {
       return $this->response->status(http_response_code() !== 200 && http_response_code() !== 400
       ?  http_response_code()
-      : 400)->text(self::$message);
+      : HttpStatusCodes::BAD_REQUEST)->text(self::$message);
     }
 
+    /**
+     * Print the error as json
+     * @return string Prints the error object (error message, and error data) as json
+     */
     public function print() {
       return $this->toJson()->print();
     }
