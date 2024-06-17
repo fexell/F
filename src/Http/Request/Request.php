@@ -13,10 +13,10 @@
 
     /**
      * The params request method
-     * @param string $param The parameter to reference
+     * @param string|array|null $param The parameter to reference
      * @return Parameters
      */
-    public function params(string | null $param = null) {
+    public function params(string | array | null $param = null) {
       return new Parameters($param);
     }
   }

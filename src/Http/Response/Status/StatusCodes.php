@@ -2,6 +2,9 @@
 
   namespace F\Http\Response;
 
+  /**
+   * Status codes as an enum
+   */
   enum HttpStatusCodes: int {
     case OK = 200;
     case CREATED = 201;

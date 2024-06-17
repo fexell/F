@@ -45,6 +45,9 @@
       if(is_string(self::$dataOrMessage) && is_null(self::$data))
         return [ 'message' => self::$dataOrMessage ];
 
+      # else if(is_string(self::$dataOrMessage) && is_null(self::$data) && )
+        # return;
+
       // Else if the $dataOrMessage variable is a string, and $data is an array,
       // return an array, with the message and the $data
       else if(is_string(self::$dataOrMessage) && is_array(self::$data))
