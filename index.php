@@ -7,8 +7,9 @@
 
   $app = new App;
 
-  $app->router('/:key')->get(function($request, $response) {
-    $request->params('key')->toJson()->print();
+  $app->router('/')->get(function($request, $response) {
+    # $response->status(400)->json('Hello World!')->print();
+    $response->status(404)->error('Hello World! This is an error!')->print();
   });
 
   $app->run();
