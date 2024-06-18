@@ -8,13 +8,13 @@
     /**
      * @var string $text The text to do something with
      */
-    public static string $text;
+    public static string | array $text;
 
     /**
      * @param string $text The text parameter, to do something with
      */
-    public function __construct(string $text) {
-      self::$text = $text;
+    public function __construct(string | array $text) {
+      self::$text = is_string($text) ? $text : implode(',', $text);
     }
 
     /**

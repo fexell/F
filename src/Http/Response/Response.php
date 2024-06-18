@@ -55,7 +55,7 @@
      * @param string $text The text to be returned in the text methods (in the Text folder -> Text.php file)
      * @return Text Return a new instance of the text class
      */
-    public function text(string $text) {
+    public function text(string | array $text) {
       return new Text($text);
     }
   }
