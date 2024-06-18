@@ -23,7 +23,7 @@
      * @access private
      * @return int Sets and returns the http response status code
      */
-    private function setHttpResponseCode() {
+    private function setHttpResponseCode(): int {
       return http_response_code($this->statusCode);
     }
   }

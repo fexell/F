@@ -6,12 +6,16 @@
    * Status codes as an enum
    */
   enum HttpStatusCodes: int {
+
+    // 200
     case OK = 200;
     case CREATED = 201;
     case ACCEPTED = 202;
     case NO_CONTENT = 204;
     case RESET_CONTENT = 205;
     case PARTIAL_CONTENT = 206;
+
+    // 300
     case MULTIPLE_CHOICES = 300;
     case MOVED_PERMANENTLY = 301;
     case FOUND = 302;
@@ -20,6 +24,8 @@
     case USE_PROXY = 305;
     case UNUSED = 306;
     case TEMPORARY_REDIRECT = 307;
+
+    // 400
     case BAD_REQUEST = 400;
     case UNAUTHORIZED = 401;
     case PAYMENT_REQUIRED = 402;

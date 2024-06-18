@@ -95,7 +95,7 @@
      * @return boolean Returns a boolean if the request uri equals to the $route
      */
     private function isRequestUri(string $route): bool {
-      return $this->getRequestUri() === $route;
+      return parse_url($this->getRequestUri())[ 'path' ] === $route;
     }
 
     /**
@@ -176,15 +176,33 @@
         // run the callback-closure on the given route
         if($this->isRequestMethod($item[ 'method' ])
         && $this->isRequestUri($route)
-        && !preg_match('/(\:)/', $route)) {
+        && !preg_match('/(\:)|(\?|\&)/', $route, $m)
+        && !parse_url($this->getRequestUri())[ 'query' ]) {
           return $this->callback($item[ 'callback' ]);
         }
 
         // Else if the request method equals the one from the request method,
-        // and the uri contains a parameter prefix (:),
-        // handle a route with parameters
+        // and the uri contains a parameter prefix (:), or parameter queries (?ABC=123&DEF=456),
+        // handle routes with those
         else if($this->isRequestMethod($item[ 'method' ])
-        && preg_match_all('/((\:)([a-z0-9]+))/i', $route, $matches)) {
+        && (preg_match_all('/((\:)([a-z0-9]+))/i', $route, $parameterMatches)
+        || parse_url($this->getRequestUri())[ 'query' ])) {
+
+          // If there are any queries in the uri,
+          // set those queries as $_GET keys and values
+          if(parse_url($this->getRequestUri())[ 'query' ]) {
+
+            // Parse the url/uri from getRequestUri(), to get a string with all the query parameters
+            $queries = parse_url($this->getRequestUri())[ 'query' ];
+
+            // Parse the string returned from ($queries) parse_url, removing the ampersands (&) from the queries,
+            // and returns them as a key->value array
+            parse_str($queries, $parsedQueries);
+
+            // For each parsed query, set it as a $_GET key with the corresponding value
+            foreach($parsedQueries as $queryKey => $queryValue)
+              $_GET[ $queryKey ] = $queryValue;
+          }
 
           /**
            * @var array $explodedRoute Extract everything between forward slashes (/)
@@ -196,7 +214,7 @@
            */
           $explodedUri = explode('/', $this->getRequestUri());
 
-          /** 
+          /**
            * @var array $extractedParameters Extract all subdirectories starting with a colon (url parameters) from the $route
            */
           $extractedParameters = preg_grep('/(\:)([a-z0-9]+)/i', $explodedRoute);
@@ -205,31 +223,31 @@
           // the count of matches found in the original route pattern ($matches).
           // If the counts don't match, the code returns a "route not registered" error,
           // indicating that the route pattern is invalid
-          if(count($extractedParameters) !== count($matches[ 0 ]))
+          if(count($extractedParameters) !== count($parameterMatches[ 0 ]))
             return $this->routeNotRegistered();
 
           // For each extracted parameter, replace each ":parameter" with the value of that parameter
-          foreach($extractedParameters as $key => $keyName) {
+          foreach($extractedParameters as $parameterKey => $parameterValue) {
 
             // If the array key (int: 0, 1, 2, ...) exists in the $explodedUri, then change the value for
             // the corresponding $explodedRoute index to the one in the $explodedUri
             // ! This is in case a match was found in the preg_match for this else if block,
             // ! but it found less parameters than given in the route; otherwise an error will be thrown
-            if(array_key_exists($key, $explodedUri)) {
-              $explodedRoute[ $key ] = $explodedUri[ $key ];
+            if(array_key_exists($parameterKey, $explodedUri)) {
+              $explodedRoute[ $parameterKey ] = $explodedUri[ $parameterKey ];
 
               // Set each key name as a $_GET parameter, which equals the value of each exploded route
-              $_GET[ preg_replace('/(\:)/', '', $keyName) ] = $explodedRoute[ $key ];
+              $_GET[ preg_replace('/(\:)/', '', $parameterValue) ] = $explodedRoute[ $parameterKey ];
 
               // Push each key name into the Request's $params variable
-              $this->request::$params[ preg_replace('/(\:)/', '', $keyName) ] = $explodedRoute[ $key ];
+              $this->request::$params[ preg_replace('/(\:)/', '', $parameterValue) ] = $explodedRoute[ $parameterKey ];
             }
           }
 
           /**
            * @var string $uri Combine all the array values in $explodedParameters into one string/uri-path
            */
-          $uri = implode('/', $explodedRoute);
+          $uri = parse_url(implode('/', $explodedRoute))[ 'path' ];
 
           /**
            * If the requested uri matches the $uri return/run the callback-closure

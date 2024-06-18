@@ -38,7 +38,7 @@
      * if $data is present, and then return an array of the items set
      * @access private
      */
-    private function checkAndReturnArray() {
+    private function checkAndReturnArray(): mixed {
 
       // If the $dataOrMessage variable is a string, and $data is null,
       // return the message as an array element, to be turned into json later

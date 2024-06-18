@@ -7,8 +7,8 @@
 
   $app = new App;
 
-  $app->router('/:key')->get(function($request, $response) {
-    
+  $app->router('/')->get(function($request, $response) {
+    $response->text($request->params('id')->get())->print();
   });
 
   $app->run();

@@ -14,7 +14,7 @@
      * @param string $text The text parameter, to do something with
      */
     public function __construct(string | array $text) {
-      self::$text = is_string($text) ? $text : implode(',', $text);
+      self::$text = is_string($text) ? $text : implode(',', (array) $text);
     }
 
     /**

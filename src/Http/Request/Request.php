@@ -16,7 +16,7 @@
      * @param string|array|null $param The parameter to reference
      * @return Parameters
      */
-    public function params(string | array | null $param = null) {
+    public function params(string | array | null $param = null): Parameters {
       return new Parameters($param);
     }
   }
