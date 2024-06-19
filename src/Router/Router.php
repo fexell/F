@@ -192,12 +192,15 @@
           // set those queries as $_GET keys and values
           if(parse_url($this->getRequestUri())[ 'query' ]) {
 
-            // Parse the url/uri from getRequestUri(), to get a string with all the query parameters
+            /**
+             * Parse the url/uri from getRequestUri(), to get a string with all the query parameters
+             * @var $queries mixed|string The queries as a string (?ABC=123&DEF=456)
+             */
             $queries = parse_url($this->getRequestUri())[ 'query' ];
 
             // Parse the string returned from ($queries) parse_url, removing the ampersands (&) from the queries,
             // and returns them as a key->value array
-            parse_str($queries, $parsedQueries);
+            parse_str((string) $queries, $parsedQueries);
 
             // For each parsed query, set it as a $_GET key with the corresponding value
             foreach($parsedQueries as $queryKey => $queryValue)

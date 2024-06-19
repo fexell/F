@@ -21,7 +21,7 @@
      */
     public function __construct(string | array | null $param = null) {
       if(!is_string($param) && !is_array($param) && !is_null($param))
-        exit('The params parameter needs to be either a string, an array, or empty.');
+        exit('The params parameter needs to be either a string, an array, or left empty.');
 
       $this->response = new Response();
       $this->param = $param;
@@ -39,8 +39,8 @@
        */
       else if(is_array($this->param))
         foreach($this->param as $key => $value)
-          if(array_key_exists($key, $_GET) && !empty($_GET[ $key ]))
-            $this->result[ $key ] = htmlspecialchars($_GET[ $key ]);
+          if(array_key_exists($key, $_GET) && !empty($value))
+            $this->result[ $key ] = htmlspecialchars($value);
 
           // If the array key does not exist or its value is empty,
           // exit with an error message
@@ -61,38 +61,11 @@
       return $this->result;
     }
 
-    /**
-     * Populate/push to $this->result with ALL $_GET parameters/data, and return $this for method chaining
-     */
-    public function all(): Parameters | string {
-
-      // When getting ALL $_GET parameters, the params() method need to be left empty,
-      // since we're not retrieving specific data; so check if $this->param IS NOT null
-      if(!is_null($this->param))
-        exit('When using the all() method for params, the given parameter/data needs to be left empty.');
-
-      // For each element retrieved in (ALL) $_GET
-      foreach($_GET as $key => $value)
-        $this->result[ $key ] = htmlspecialchars($_GET[ $key ]);
-
-      // Lastly return $this (this class) for method chaining
-      return $this;
-    }
-
-    /**
-     * Method for printing the result as json
-     */
-    public function print(): Parameters | string {
-
-      // If the $result variable is an array, then print it as json
-      if(is_array($this->result))
-        return $this->response->json($this->result)->print();
-
-      // Otherwise, if the $result variable is a string, return and convert the $result into an array,
-      // to be printed as json
-      else if(is_string($this->result))
+    public function print(): string {
+      if(is_string($this->result))
         return $this->response->json([ $this->param => $this->result ])->print();
 
-      return $this;
+      else if(is_array($this->result))
+        return $this->response->json([ ...$this->result ])->print();
     }
   }

@@ -8,7 +8,8 @@
   $app = new App;
 
   $app->router('/')->get(function($request, $response) {
-    $response->text($request->params('id')->get())->print();
+    # $response->text($request->params('id')->get())->print();
+    $request->params('id')->print();
   });
 
   $app->run();
